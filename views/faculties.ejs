@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Управление факультетами</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/edit.css">
+</head>
+<body>
+    <main>
+        <div class="one-block">
+            <button onclick="toggleClass('addFacultyForm')">Add</button>
+            <form id="addFacultyForm" class="form hidden toggle" action="addFaculty" method="post">
+                <input type="text" name="facultyname" placeholder="Faculty name" required>
+                <button class="black-button" type="submit">OK</button>
+            </form>
+        </div>
+
+        <div class="one-block">
+            <button onclick="toggleClass('editFacultyForm')">Edit</button>
+            <div class="all-list toggle hidden" id="editFacultyForm">
+                <table style="margin-inline: auto;">
+                    <tbody>
+                        <% faculties.forEach(faculty => { %>
+                            <tr>
+                                <td style="font-size: 2em; font-weight: bold; cursor: pointer; margin-bottom: 1em;" onclick="openEditModal('editFacultyOldName', 'editFacultyName', 'facultyModal', '<%= faculty.Name %>')")">
+                                    <%= faculty.Name %>
+                                </td>
+                            </tr>
+                        <% }); %>
+                    </tbody>
+                </table>
+            </div>
+
+            <div id="facultyModal" class="confirm-modal hidden" style="flex-direction: column;">
+                <div>
+                    <h2>Редактировать факультет</h2>
+                    <form action="/updateFaculty" method="post">
+                        <input type='hidden' id="editFacultyOldName" name="oldName">
+                        <input type="text" id="editFacultyName" name="facultyname" required>
+                        <button class="black-button" type="submit">Сохранить</button>
+                        <button type="button" class="black-button" onclick="closeModal('facultyModal')">Закрыть</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="one-block">
+            <button onclick="toggleClass('deleteFacultyForm')">Delete</button>
+            <div class="all-list toggle hidden" id="deleteFacultyForm">
+                <table style="margin-inline: auto;">
+                    <tbody>
+                        <% faculties.forEach(faculty => { %>
+                            <tr>
+                                <td style="font-size: 2em; font-weight: bold; cursor: pointer; margin-bottom: 1em;" onclick="confirmDelete('<%= faculty.Name %>')">
+                                    <%= faculty.Name %>
+                                </td>
+                            </tr>
+                        <% }); %>
+                    </tbody>
+                </table>
+            </div>
+
+            <div id="deleteModal" style="display:none; flex-direction: column;">
+                <div>
+                    <h2>Подтвердите удаление факультета</h2>
+                    <p id="deleteGroupNameDisplay"></p>
+                    <form id="deleteFormAction" action="/deleteFaculty" method="post">
+                        <input type="hidden" id="deleteFacultyId" name="facultyname">
+                        <button class="black-button" type="submit">Удалить</button>
+                        <button type="button" class="black-button" onclick="closeModal('deleteModal')">Закрыть</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="/commonFunctions.js"></script>
+</body>
+</html>

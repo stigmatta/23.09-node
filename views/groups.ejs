@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Редактирование групп</title>
+    <link rel="stylesheet" href="/edit.css">
+</head>
+<body>
+    <main>
+        <div class="one-block">
+            <button onclick="toggleClass('addGroupForm')">Add</button>
+            <form id="addGroupForm" class="form hidden toggle" action="addGroup" method="post">
+                <input type="text" name="groupname" placeholder="Group name" required>
+                <input type="text" name="facultyname" placeholder="Faculty name" required>
+                <button class="black-button" type="submit">OK</button>
+            </form>
+        </div>
+
+        <div class="one-block">
+            <button onclick="toggleClass('editGroupForm')">Edit</button>
+            <div class="all-list toggle hidden" id="editGroupForm">
+                <table style="margin-inline: auto;">
+                    <tbody>
+                        <% groups.forEach(group => { %>
+                            <tr>
+                                <td style="font-size: 2em; font-weight: bold; cursor: pointer; margin-bottom: 1em;" onclick="openEditModal('editGroupOldName', 'editGroupName', 'groupModal', '<%= group.Name %>')">
+                                    <%= group.Name %>
+                                </td>
+                            </tr>
+                        <% }); %>
+                    </tbody>
+                </table>
+            </div>
+
+            <div id="groupModal" class="confirm-modal" style="display:none; flex-direction: column;">
+                <div>
+                    <h2>Редактировать группу</h2>
+                    <form action="/updateGroup" method="post">
+                        <input type='hidden' id="editGroupOldName" name="oldName">
+                        <input type="text" id="editGroupName" name="groupname" required>
+                        <button class="black-button" type="submit">Сохранить</button>
+                        <button type="button" class="black-button" onclick="closeModal('groupModal')">Закрыть</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="one-block">
+            <button onclick="toggleClass('deleteGroupForm')">Delete</button>
+            <div class="all-list toggle hidden" id="deleteGroupForm">
+                <table style="margin-inline: auto;">
+                    <tbody>
+                        <% groups.forEach(group => { %>
+                            <tr>
+                                <td style="font-size: 2em; font-weight: bold; cursor: pointer; margin-bottom: 1em;" onclick="confirmDelete('deleteGroupId', '<%= group.Name %>', 'deleteModal')">
+                                    <%= group.Name %>
+                                </td>
+                            </tr>
+                        <% }); %>
+                    </tbody>
+                </table>
+            </div>
+        
+            <div id="deleteModal" class="confirm-modal" style="display:none; flex-direction: column;">
+                <div>
+                    <h2>Подтвердите удаление группы</h2>
+                    <form id="deleteFormAction" action="/deleteGroup" method="post">
+                        <input type="hidden" id="deleteGroupId" name="groupname">
+                        <button class="black-button" type="submit">Удалить</button>
+                        <button type="button" class="black-button" onclick="closeModal('deleteModal')">Закрыть</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        
+    </main>
+
+    <script src="/commonFunctions.js"></script>
+</body>
+</html>
